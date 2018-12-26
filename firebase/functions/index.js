@@ -43,15 +43,28 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   function database(agend) {
     console.log('Function database called');
     const ort = agent.parameters.ort;
-    agent.add('Webhook, Du suchst eine Bar in ' + ort);
+    agent.add('Webhook, Du suchst eine Bar in ' + ort + ". ");
     return db.collection('bars').get()
             .then((snapshot) => {
                 snapshot.forEach((doc) => {
+                //snapshot.filter((doc) => {
                     const docData = doc.data();
-                    agent.add(doc.id + '=>' + docData);
+                    if (docData.TestBar.Adresse.Ort === ort) {
+                        console.log(JSON.stringify(docData));
+                        //console.log('Barname: ' + docData.TestBar.Barname);
+                        //console.log('Adresse Ort: ' + docData.TestBar.Adresse.Ort);
+                        agent.add('Bar gefunden: ' + doc.id + ' => ' + JSON.stringify(docData));
+                    } else {
+                        agent.add('Keine Bar gefunden.');
+                    }
+                    
+                    
+                        
+
                     // const docData = doc.data();
                     // agent.add(JSON.stringify(docData));
                 });
+                
             })
             .catch((err) => {
                agent.add('Error getting documents', err);
