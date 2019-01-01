@@ -49,13 +49,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
                 snapshot.forEach((doc) => {
                 //snapshot.filter((doc) => {
                     const docData = doc.data();
-                    if (docData.TestBar.Adresse.Ort === ort) {
+                    if (docData.Bar.Adresse.Stadt === ort) {
                         console.log(JSON.stringify(docData));
                         //console.log('Barname: ' + docData.TestBar.Barname);
                         //console.log('Adresse Ort: ' + docData.TestBar.Adresse.Ort);
                         agent.add('Bar gefunden: ' + doc.id + ' => ' + JSON.stringify(docData));
                     } else {
-                        agent.add('Keine Bar gefunden.');
+                        agent.add('Keine Bar gefunden');
+                        agent.add(new Suggestion('Ja'));
+                        agent.add(new Suggestion('Nein'));
                     }
                     
                     
